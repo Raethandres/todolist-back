@@ -42,18 +42,19 @@ routes.get('/', (req, res) => {
 });
 
 routes.get('/generate', (req, res) => {
-  cont Cub=generate({1,1,1},{req.x,req.y,req.z})
+  const Cub=generate({x:1,y:1,z:1},{x:req.x,y:req.y,z:req.z})
   res.render('index', { title });
 });
 
 routes.post('/update', (req, res) => {
-  r=Cub.findIndex((element)=>{if(element.x==req.x && element.y==req.y && element.z==req.z){return element}})
+  let r=Cub.findIndex((element)=>{if(element.x==req.x && element.y==req.y && element.z==req.z){return element}})
   Cub[r]=Object.assign({},{v:req.v})
   res.render('index', { title });
 });
 
 routes.get('/querry', (req, res) => {
-    r=M.findIndex((element)=>{if(element.x==se.x && element.y==se.y && element.z==se.z){return element}})
+  const subCub=generate({x:req.xi,y:req.yi,z:req.zi},{x:req.xe,y:req.ye,z:req.ze})
+  let r=Cub.findIndex((element)=>{if(element.x==req.x && element.y==req.y && element.z==req.z){return element}})
   res.render('index', { title });
 });
 
