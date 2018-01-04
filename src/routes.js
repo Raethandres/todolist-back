@@ -39,8 +39,7 @@ var Cub=Array()
  }
 
 routes.get('/', (req, res) => {
-  res.end("binvenido");
-  
+  res.end("binvenido. <br> use los routes: /generate :para generar el cubo donde recive por post x=<Dimencion en x>, y=<Dimencion en y>,z=<Dimencion en z> <br> /update :para actulizar una posicion donde recive por post x=<Dimencion en x>, y=<Dimencion en y>,z=<Dimencion en z> ,v=<Valor por asignar> <br> /querry : ra generar el cubo donde recive por post xi=<Dimencion en x inicial>, yi=<Dimencion en y inicial>,zi=<Dimencion en z inicial> xe=<Dimencion en x final>, ye=<Dimencion en y final>,ze=<Dimencion en z final>") 
 });
 
 routes.post('/generate', (req, res) => {
@@ -63,7 +62,7 @@ routes.post('/querry', (req, res) => {
   count+=subCub[i].v
   console.log(subCub[i])
 }
-  res.end(JSON.stringify({valor:count}));
+  res.end(JSON.stringify({valor:count}))
 });
 
 export default routes;
