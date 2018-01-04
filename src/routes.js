@@ -52,7 +52,7 @@ routes.post('/generate', (req, res) => {
 
 routes.post('/update', (req, res) => {
   let r=Cub.findIndex((element)=>{if(element.x==req.body.x && element.y==req.body.y && element.z==req.body.z){return element}})
-  Cub[r]=Object.assign(Cub[r],{v:int(req.body.v)})
+  Cub[r]=Object.assign(Cub[r],{v: parseInt(req.body.v)})
   res.end(JSON.stringify({cub:Cub}))
 });
 
