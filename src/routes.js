@@ -2,6 +2,8 @@ import { Router } from 'express';
 const  fs =require('fs')
 
 const routes = Router();
+var Cub=Array()
+
 
 /**
  * GET home page
@@ -16,7 +18,7 @@ const routes = Router();
   let sa=Object.assign({},s)
 
   while(true){
-    M.push({x:sa.x,y:sa.y,z:sa.z})
+    M.push({x:sa.x,y:sa.y,z:sa.z,v:sa.v})
     if(sa.z<e.z){
       sa.z+=1
 
@@ -37,25 +39,31 @@ const routes = Router();
  }
 
 routes.get('/', (req, res) => {
-  res.render('index', { title });
+  res.end("binvenido");
   
 });
 
-routes.get('/generate', (req, res) => {
-  const Cub=generate({x:1,y:1,z:1},{x:req.x,y:req.y,z:req.z})
-  res.render('index', { title });
+routes.post('/generate', (req, res) => {
+  console.log(req.body)
+  Cub=generate({x:1,y:1,z:1,v:0},{x:req.body.x,y:req.body.y,z:req.body.z})
+  console.log(Cub)
+  res.end(JSON.stringify({cub:Cub}))
 });
 
 routes.post('/update', (req, res) => {
-  let r=Cub.findIndex((element)=>{if(element.x==req.x && element.y==req.y && element.z==req.z){return element}})
-  Cub[r]=Object.assign({},{v:req.v})
-  res.render('index', { title });
+  let r=Cub.findIndex((element)=>{if(element.x==req.body.x && element.y==req.body.y && element.z==req.body.z){return element}})
+  Cub[r]=Object.assign(Cub[r],{v:int(req.body.v)})
+  res.end(JSON.stringify({cub:Cub}))
 });
 
-routes.get('/querry', (req, res) => {
-  const subCub=generate({x:req.xi,y:req.yi,z:req.zi},{x:req.xe,y:req.ye,z:req.ze})
-  let r=Cub.findIndex((element)=>{if(element.x==req.x && element.y==req.y && element.z==req.z){return element}})
-  res.render('index', { title });
+routes.post('/querry', (req, res) => {
+  let subCub=Cub.slice(Cub.findIndex((element)=>{if(element.x==req.body.xi && element.y==req.body.yi && element.z==req.body.zi){return element}}),Cub.findIndex((element)=>{if(element.x==req.body.xe && element.y==req.body.ye && element.z==req.body.ze){return element}})+1)
+  let count=0
+ for (var i = 0, len = subCub.length; i < len; i++) {
+  count+=subCub[i].v
+  console.log(subCub[i])
+}
+  res.end(JSON.stringify({valor:count}));
 });
 
 export default routes;
