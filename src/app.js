@@ -1,30 +1,25 @@
 import express from 'express';
-import path from 'path';
-import logger from 'morgan';
 import bodyParser from 'body-parser';
 import routes from './routes';
-
+import session from 'express-session'
+import cookieSession from 'cookie-session'
 const app = express();
-app.disable('x-powered-by');
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
 // View engine setup
-app.set('views', path.join(__dirname, '../views'));
-app.set('view engine', 'pug');
-
-app.use(logger('dev', {
-  skip: () => app.get('env') === 'test'
-}));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Authorization")
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE")
   next();
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, '../public')));
-
+app.use(express.static(__dirname + '/public'));
 // Routes
 app.use('/', routes);
 

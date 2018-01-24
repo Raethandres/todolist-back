@@ -1,5 +1,4 @@
 import { Pool } from 'pg'
-import { Config } from '../config.js'
 
 function conection(){
 	 pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
@@ -35,18 +34,11 @@ export function Insert(value){
 
 export function Delete(value){
 	const pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
-		console.log(value)
-		if (value.and){
-		  var query = {
-  			text: 'DELETE FROM '+value.from+" WHERE id_li= $1 and id_it=$2",
-  			values:[value.values]
-  			}	
-		}else{
 			var query = {
   			text: 'DELETE FROM '+value.from+" WHERE "+value.id+"= $1",
   			values:[value.values]
   			}
-		}
+  			console.log(query)
    return pool.query(query)
 
 }
