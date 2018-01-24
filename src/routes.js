@@ -1,68 +1,57 @@
 import { Router } from 'express';
+import { Select, Insert } from './querry.js'
 const  fs =require('fs')
 
 const routes = Router();
 var Cub=Array()
 
 
-/**
- * GET home page
- */
 
- const generate=(Ini,End)=>{
 
-  let M=Array()
 
-  let s=Object.assign({},Ini)
-  let e=Object.assign({},End)
-  let sa=Object.assign({},s)
-
-  while(true){
-    M.push({x:sa.x,y:sa.y,z:sa.z,v:sa.v})
-    if(sa.z<e.z){
-      sa.z+=1
-
-    }else if(sa.y<e.y){
-      sa=Object.assign(sa,{z:s.z})
-      sa.y+=1
-    }else if(sa.x<e.x){
-      sa=Object.assign(sa,{z:s.z})
-      sa=Object.assign(sa,{y:s.y})
-      sa.x+=1
-    }else{
-
-      break
-    }
-  }
-    return M
-
- }
-
-routes.get('/', (req, res) => {
-  res.end("binvenido. <br> use los routes: /generate :para generar el cubo donde recive por post x=<Dimencion en x>, y=<Dimencion en y>,z=<Dimencion en z> <br> /update :para actulizar una posicion donde recive por post x=<Dimencion en x>, y=<Dimencion en y>,z=<Dimencion en z> ,v=<Valor por asignar> <br> /querry : ra generar el cubo donde recive por post xi=<Dimencion en x inicial>, yi=<Dimencion en y inicial>,zi=<Dimencion en z inicial> xe=<Dimencion en x final>, ye=<Dimencion en y final>,ze=<Dimencion en z final>") 
+routes.get('/list', async (req, res) => {
+  let {rows}= await Select({from:'list'})
+  res.end(JSON.stringify(rows))
+  
 });
 
-routes.post('/generate', (req, res) => {
-  console.log(req.body)
-  Cub=generate({x:1,y:1,z:1,v:0},{x:req.body.x,y:req.body.y,z:req.body.z})
-  console.log(Cub)
-  res.end(JSON.stringify({cub:Cub}))
+routes.get('/list/:id',async (req, res) => {
+   let {rows}= await Select({from:'item',where:req.params.id})
+   res.end(JSON.stringify(rows))
+  
 });
 
-routes.post('/update', (req, res) => {
+routes.post('/list/:id',async (req, res) => {
+
+  let { rows }= await Insert({from:'item',val:'(name,id_li)',vals:'($1,$2)',values:[req.body.item, parseInt(req.params.id)]})
+  res.end(JSON.stringify({name:req.body.item,id:rows[0].id_it}))
+    
+  });
+
+routes.post('/list', async(req, res) => {
+  let {rows}= await Insert({from:'list',val:'(name)',vals:'($1)',values:[req.body.list]})
+  console.log(rows)
+  res.end(JSON.stringify({name:req.body.list,id:rows[0].id}))
+  
+  
+});
+
+routes.put('/list', (req, res) => {
   let r=Cub.findIndex((element)=>{if(element.x==req.body.x && element.y==req.body.y && element.z==req.body.z){return element}})
   Cub[r]=Object.assign(Cub[r],{v: parseInt(req.body.v)})
   res.end(JSON.stringify({cub:Cub}))
 });
 
-routes.post('/querry', (req, res) => {
-  let subCub=Cub.slice(Cub.findIndex((element)=>{if(element.x==req.body.xi && element.y==req.body.yi && element.z==req.body.zi){return element}}),Cub.findIndex((element)=>{if(element.x==req.body.xe && element.y==req.body.ye && element.z==req.body.ze){return element}})+1)
-  let count=0
- for (var i = 0, len = subCub.length; i < len; i++) {
-  count+=subCub[i].v
-  console.log(subCub[i])
-}
-  res.end(JSON.stringify({valor:count}))
+routes.delete('/list/:id',async (req, res) => {
+  let {rows} = await Delete({from:'list',id:'id',values:[req.params.id]})
+  res.end(JSON.stringify(parseInt(req.params.id)))
+  
+});
+
+routes.delete('/list/:id/:it',async (req, res) => {
+  let {rows} = await Delete({from:'item',id:'id_li',values:[req.params.id]})
+  res.end(JSON.stringify(parseInt(req.params.it)))
+  
 });
 
 export default routes;
