@@ -42,9 +42,9 @@ routes.post('/list/:id',async (req, res) => {
 
 routes.post('/list', async(req, res) => {
   
-  let {rows}= await Insert({from:'list',val:'(name)',vals:'($1)',values:[req.body.list]})
+  let {rows}= await Insert({from:'list',val:'(name,id_us)',vals:'($1,$2)',values:[req.body.list,req.body.user]})
   console.log(rows)
-  res.end(JSON.stringify({name:req.body.list,id:rows[0].id}))
+  res.end(JSON.stringify({name:req.body.list,id:rows[0].id,user:req.body.user}))
   
   
 });
