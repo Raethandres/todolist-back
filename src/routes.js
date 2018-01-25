@@ -12,6 +12,12 @@ routes.post('/loggin',(req, res) => {
   res.send(JSON.stringify(req.body));
 });
 
+routes.get('/', async (req, res) => {
+    console.log(req.headers)
+    res.end("BIENVENIDO")
+  
+  
+});
 
 routes.get('/list', async (req, res) => {
     console.log(req.headers)
