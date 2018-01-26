@@ -5,13 +5,6 @@ const  fs =require('fs')
 const routes = Router();
 
 
-routes.post('/loggin',(req, res) => {
-  const {user}=req.session
-  req.session.user=22
-   console.log(req.body)
-  res.send(JSON.stringify(req.body));
-});
-
 routes.get('/', async (req, res) => {
     console.log(req.headers)
     res.end("BIENVENIDO")
@@ -19,16 +12,25 @@ routes.get('/', async (req, res) => {
   
 });
 
+routes.post('/user', async(req, res) => {
+  
+  let {rows}= await Insert({from:'use',val:'(token)',vals:'($1)',values:[req.body.token]})
+  console.log(rows)
+  res.end(JSON.stringify({name:req.body.token,id:rows[0].id}))
+  
+  
+});
+
 routes.get('/list', async (req, res) => {
     console.log(req.headers)
-    let {rows}= await Select({from:'list'})
+    let {rows}= await Select({from:'list',where:req.headers.authorization})
     res.end(JSON.stringify({list:rows}))
   
   
 });
 
 routes.get('/list/:id',async (req, res) => {
-   let {rows}= await Select({from:'item',where:req.params.id})
+   let {rows}= await Select({from:'item',it:req.params.id})
    res.end(JSON.stringify({item:rows}))
  
   
@@ -42,7 +44,7 @@ routes.post('/list/:id',async (req, res) => {
 
 routes.post('/list', async(req, res) => {
   
-  let {rows}= await Insert({from:'list',val:'(name,id_us)',vals:'($1,$2)',values:[req.body.list,req.body.user]})
+  let {rows}= await Insert({from:'list',val:'(name,id_us)',vals:'($1,$2)',values:[req.body.list,req.headers.authorization]})
   console.log(rows)
   res.end(JSON.stringify({name:req.body.list,id:rows[0].id,user:req.body.user}))
   
