@@ -1,11 +1,13 @@
 import { Pool } from 'pg'
+const respaldlocal="connectionString:'postgres://postgres:kara@localhost:5432/todo'"
 
 function conection(){
-	 pool = new Pool({connectionString:'postgres://mbdfzusjvgjvga:14771ec76fe86ac3f185bfde1e93e484b2c402b2499533007d0a7515b6456e88@ec2-54-235-220-220.compute-1.amazonaws.com:5432/d848clemua0f07'})
+	return new Pool({connectionString:'postgres://mbdfzusjvgjvga:14771ec76fe86ac3f185bfde1e93e484b2c402b2499533007d0a7515b6456e88@ec2-54-235-220-220.compute-1.amazonaws.com:5432/d848clemua0f07'})
+	
 }
 
 export function Select(value) {
-	const pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
+	const pool = conection()
 		console.log(value)
 		if(value.it){
 			var query = {
@@ -23,7 +25,8 @@ export function Select(value) {
    return pool.query(query)
 }
 export function Insert(value){
-	const pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
+	const pool = conection()
+
 			var query = {
   			text: 'INSERT INTO '+value.from+" "+value.val+' VALUES' +value.vals+' RETURNING *',
   			values:[...value.values],
@@ -34,7 +37,8 @@ export function Insert(value){
 }
 
 export function Delete(value){
-	const pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
+	const pool = conection()
+
 			var query = {
   			text: 'DELETE FROM '+value.from+" WHERE "+value.id+"= $1",
   			values:[value.values]
@@ -44,7 +48,8 @@ export function Delete(value){
 
 }
 export function Update(value){
-	const pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
+	const pool = conection()
+
 		console.log(value)
 		if(value.where){
 			var query = {
@@ -63,7 +68,8 @@ export function Update(value){
 }
 
 export function Query(value){
-	const pool = new Pool({connectionString:'postgres://postgres:kara@localhost:5432/todo'})
+	const pool = conection()
+	
 	console.log(value)
    return pool.query(value)
 
